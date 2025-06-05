@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepScan - Logo Font Awesome & Tombol Optimal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            color: #1f2937;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+        }
+        .dark .panel-card, .dark .output-card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+        }
+        .dark .section-title { color: #f0f0f0; }
+        .dark input, .dark select, .dark textarea {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            border-color: #30363d;
+        }
+        .dark input[type="color"] {
+            border-color: #4b5563 !important; 
+        }
+        .dark input::placeholder, .dark textarea::placeholder {
+            color: #768390;
+        }
+        .dark .qr-code-display-bg { 
+            background-color: #2d3748;
+        }
+        .dark .template-preview {
+            border-color: #4b5563;
+            background-color: #2d3748;
+        }
+        .dark .template-preview.active {
+            border-color: #60a5fa; 
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.5);
+        }
+        .dark .template-preview-text {
+            color: #9ca3af;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e5e7eb; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-track { background: #161b22; }
+        ::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #484f58; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #58a6ff; }
+
+        .tooltip { position: relative; }
+        .tooltip:hover::after {
+            content: attr(data-tooltip); position: absolute; bottom: 110%;
+            left: 50%; transform: translateX(-50%); background-color: #1f2937;
+            color: white; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem;
+            z-index: 100; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .dark .tooltip:hover::after {
+            background-color: #c9d1d9;
+            color: #1f2937;
+        }
+
+        .panel-card, .output-card {
+            background-color: #ffffff; 
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04); 
+            transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+        .section-title {
+            font-size: 1.3rem; 
+            font-weight: 600; margin-bottom: 1rem; 
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+        }
+        .section-title i.fa-icon-title { 
+            margin-right: 0.6rem;
+            color: #3b82f6; 
+            font-size: 1.1em; 
+        }
+        .dark .section-title i.fa-icon-title {
+            color: #60a5fa; 
+        }
+        
+        .header-logo-svg {
+            width: auto;
+            height: 40px; 
+            margin-right: 10px;
+        }
+        .dark .header-logo-svg text { fill: #c9d1d9; }
+        .dark .header-logo-svg tspan[fill="url(#logoGradientScan)"] {
+             fill: url(#logoGradientScan);
+        }
+
+        .qr-code-display-wrapper { 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            height: 100%; 
+        }
+        .qr-code-display-bg { 
+            width: 100%;
+            max-width: 340px; 
+            min-height: 340px; 
+            margin-bottom: 1.5rem; 
+            padding: 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+            background-color: #e2e8f0; 
+        }
+        #qrcodeCanvas { 
+            display: block; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .fun-button {
+            display: inline-flex; 
+            align-items: center;
+            justify-content: center; 
+            text-align: center; 
+            padding-top: 0.75rem; 
+            padding-bottom: 0.75rem;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
+        .fun-button i { 
+            margin-right: 0.6rem; 
+            font-size: 1em; 
+        }
+        .fun-button:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        .fun-button:active {
+            transform: translateY(0px) scale(0.98);
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+        }
+         .modal {
+            position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            overflow: auto; background-color: rgba(0,0,0,0.7); 
+            display: flex;
+            align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
+        }
+        .modal.show {
+            opacity: 1; visibility: visible;
+        }
+        .modal-content {
+            background-color: #fff; padding: 25px; border-radius: 12px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); width: 90%; max-width: 450px;
+            transform: scale(0.9); transition: transform 0.3s ease-out;
+        }
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        .dark .modal-content { background-color: #161b22; border: 1px solid #30363d;}
+        .modal-close { float: right; font-size: 1.5rem; font-weight: bold; cursor: pointer; }
+        .dark .modal-close { color: #c9d1d9; }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr; 
+            gap: 1.5rem;
+        }
+        @media (min-width: 1024px) { 
+            .main-layout {
+                grid-template-columns: minmax(380px, 5fr) 7fr; 
+            }
+            .controls-panel {
+                max-height: calc(100vh - 160px); 
+            }
+        }
+        #logoPreview {
+            width: 50px; height: 50px; object-fit: contain; margin-top: 5px; border: 1px dashed #ccc;
+            border-radius: 4px; padding: 2px;
+        }
+        .custom-logo-upload-wrapper { 
+            margin-bottom: 1rem; 
+        }
+        .template-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); 
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        .template-preview {
+            aspect-ratio: 1 / 1;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6px; 
+            transition: all 0.2s ease-in-out;
+            background-color: #f8fafc;
+        }
+        .template-preview:hover {
+            border-color: #93c5fd; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .template-preview.active {
+            border-color: #3b82f6; 
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+            background-color: #eff6ff;
+        }
+        .template-preview-icon {
+            font-size: 1.6rem; 
+            margin-bottom: 3px;
+            color: #60a5fa;
+        }
+        .template-preview-text {
+            font-size: 0.65rem; 
+            text-align: center;
+            color: #4b5563;
+            line-height: 1.2;
+        }
+        .output-buttons-container { 
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem; 
+            width: 100%;
+            max-width: 280px; 
+        }
+
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 sm:p-6">
+
+    <div class="w-full max-w-7xl mx-auto">
+        <header class="text-center mb-10 flex flex-col items-center">
+             <div class="flex items-center justify-center mb-2">
+                <svg id="deepScanHeaderLogo" class="header-logo-svg" viewBox="0 0 250 50" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGradientScan" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#0EA5E9;stop-opacity:1" /> 
+                            <stop offset="50%" style="stop-color:#22D3EE;stop-opacity:1" /> 
+                            <stop offset="100%" style="stop-color:#67E8F9;stop-opacity:1" /> 
+                        </linearGradient>
+                         <filter id="headerLogoIconShadowScan" x="-20%" y="-20%" width="140%" height="140%">
+                            <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.15"/>
+                        </filter>
+                    </defs>
+                    <rect x="7" y="7" width="14" height="14" rx="2" fill="url(#logoGradientScan)" filter="url(#headerLogoIconShadowScan)"/>
+                    <rect x="29" y="7" width="14" height="14" rx="2" fill="url(#logoGradientScan)" filter="url(#headerLogoIconShadowScan)" opacity="0.7"/>
+                    <rect x="7" y="29" width="14" height="14" rx="2" fill="url(#logoGradientScan)" filter="url(#headerLogoIconShadowScan)" opacity="0.7"/>
+                    <rect x="29" y="29" width="14" height="14" rx="2" fill="#A5B4FC" opacity="0.4"/> 
+                    <line x1="20" y1="25" x2="45" y2="25" stroke="#A5B4FC" stroke-width="2" opacity="0.3"/>
+                    <text x="60" y="35" font-family="Poppins, sans-serif" font-size="30" font-weight="bold" fill="#1f2937">
+                        Deep<tspan fill="url(#logoGradientScan)" font-weight="bold">Scan</tspan>
+                    </text>
+                </svg>
+            </div>
+            <p class="text-gray-600 dark:text-gray-300 mt-1 text-lg">Buat & Kustomisasi Kode QR Anda dengan Mudah!</p>
+        </header>
+
+        <div class="flex justify-end items-center mb-6 px-2 sm:px-0">
+            <button id="themeToggle" class="p-3 bg-gray-200 dark:bg-gray-700 rounded-full text-gray-800 dark:text-gray-200 tooltip fun-button" data-tooltip="Ganti tema">
+                <i id="themeIcon" class="fas fa-sun w-5 h-5"></i>
+            </button>
+        </div>
+
+        <div class="main-layout">
+            <div class="panel-card controls-panel space-y-6 overflow-y-auto">
+                <div>
+                    <h2 class="section-title"><i class="fas fa-edit fa-icon-title"></i>Input Data</h2>
+                    <textarea id="qrData" rows="3" placeholder="https://deepscan.id atau Pesan Rahasia Anda..." class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition duration-150"></textarea>
+                </div>
+
+                <div>
+                    <h2 class="section-title"><i class="fas fa-cog fa-icon-title"></i>Pengaturan Dasar QR</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="qrSize" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ukuran QR (px):</label>
+                            <select id="qrSize" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-cyan-500">
+                                <option value="128">128</option> <option value="256" selected>256</option>
+                                <option value="300">300</option> <option value="400">400</option><option value="512">512</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="qrErrorLevel" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Koreksi Error:</label>
+                            <select id="qrErrorLevel" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-cyan-500">
+                                <option value="L">Rendah (L)</option> <option value="M" selected>Sedang (M)</option>
+                                <option value="Q">Cukup (Q)</option> <option value="H">Tinggi (H)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="qrColorDark" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Warna QR:</label>
+                            <input type="color" id="qrColorDark" value="#000000" class="w-full h-10 p-1 border border-gray-300 rounded-lg shadow-sm cursor-pointer">
+                        </div>
+                        <div>
+                            <label for="qrColorLight" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Warna Latar QR:</label>
+                            <input type="color" id="qrColorLight" value="#ffffff" class="w-full h-10 p-1 border border-gray-300 rounded-lg shadow-sm cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h2 class="section-title"><i class="fas fa-palette fa-icon-title"></i>Bingkai & Tampilan</h2>
+                    <div class="mb-4">
+                        <label for="qrQuietZone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Margin Dalam (Quiet Zone):</label>
+                        <select id="qrQuietZone" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-cyan-500">
+                            <option value="1">Minimal</option> <option value="2">Kecil</option>
+                            <option value="4" selected>Normal</option> <option value="6">Besar</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pilih Templat Bingkai:</label>
+                        <div id="borderTemplateGallery" class="template-preview-grid">
+                            </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="section-title"><i class="fas fa-icons fa-icon-title"></i>Tambahkan Logo</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="qrLogoSelect" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pilih Logo:</label>
+                            <select id="qrLogoSelect" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-cyan-500">
+                                <option value="">Tidak Ada</option>
+                                <option value="youtube" data-icon="fab fa-youtube" data-color="#FF0000">YouTube</option>
+                                <option value="instagram" data-icon="fab fa-instagram" data-color="#E1306C">Instagram</option>
+                                <option value="tiktok" data-icon="fab fa-tiktok" data-color="#000000">TikTok</option>
+                                <option value="twitter" data-icon="fab fa-twitter" data-color="#1DA1F2">X (Twitter)</option>
+                                <option value="facebook" data-icon="fab fa-facebook-f" data-color="#1877F2">Facebook</option>
+                                <option value="github" data-icon="fab fa-github" data-color="#181717">GitHub</option>
+                                <option value="whatsapp" data-icon="fab fa-whatsapp" data-color="#25D366">WhatsApp</option>
+                                <option value="linkedin" data-icon="fab fa-linkedin-in" data-color="#0077B5">LinkedIn</option>
+                                <option value="spotify" data-icon="fab fa-spotify" data-color="#1DB954">Spotify</option>
+                                <option value="website" data-icon="fas fa-link" data-color="#4A90E2">Website</option>
+                                <option value="wifi" data-icon="fas fa-wifi" data-color="#4A90E2">WiFi</option>
+                                <option value="custom">Kustom</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="qrLogoSize" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ukuran Logo:</label>
+                            <select id="qrLogoSize" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-cyan-500">
+                                <option value="0.15">Kecil</option> <option value="0.20" selected>Sedang</option>
+                                <option value="0.25">Besar</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="customLogoUploadContainer" class="mb-4 custom-logo-upload-wrapper" style="display: none;">
+                        <label for="qrLogoUpload" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Unggah Logo Kustom:</label>
+                        <input type="file" id="qrLogoUpload" accept="image/png, image/jpeg" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-cyan-50 dark:file:bg-gray-700 file:text-cyan-700 dark:file:text-cyan-300 hover:file:bg-cyan-100 dark:hover:file:bg-gray-600 cursor-pointer">
+                        <img id="logoPreview" src="#" alt="Pratinjau Logo" class="mt-2" style="display:none;"/> 
+                    </div>
+                     <div class="mb-4"> 
+                        <label for="qrLogoBg" class="flex items-center">
+                            <input type="checkbox" id="qrLogoBg" checked class="h-4 w-4 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500">
+                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Latar Area Logo (sesuai warna latar QR)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="output-card qr-code-display-wrapper">
+                 <h2 class="section-title text-center"><i class="fas fa-eye fa-icon-title"></i>Pratinjau Kode QR</h2>
+                <div id="qrCodeContainerWrapper" class="qr-code-display-bg dark:qr-code-display-bg">
+                    <canvas id="qrcodeCanvas"></canvas> 
+                </div>
+                <div class="output-buttons-container">
+                    <button id="generateQrButtonMain" class="w-full bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-600 hover:to-sky-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md fun-button text-lg">
+                        <i class="fas fa-qrcode"></i>Buat Kode QR
+                    </button>
+                    <button id="downloadQrButton" style="display: none;" class="w-full bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md fun-button text-lg">
+                        <i class="fas fa-download"></i>Unduh Kode QR
+                    </button>
+                </div>
+                 <p id="qrTip" class="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center" style="display: none;">Tips: Uji coba kode QR Anda setelah ditambahkan logo atau bingkai.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <span id="closeMessageModal" class="modal-close">&times;</span>
+            <h3 id="messageModalTitle" class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Pemberitahuan</h3>
+            <p id="messageModalText" class="text-gray-700 dark:text-gray-300"></p>
+            <div id="messageModalButtons" class="mt-6 flex justify-end space-x-3">
+                 <button id="messageModalOkButton" class="py-2.5 px-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg fun-button">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center py-8 mt-12 text-gray-500 dark:text-gray-400 text-sm">
+        © <span id="year"></span> DeepScan. Dibuat oleh <span class="font-semibold text-sky-600 dark:text-sky-400">Rakhan</span>.
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- Global Variables and DOM Elements ---
+        const qrDataInput = document.getElementById('qrData');
+        const qrSizeSelect = document.getElementById('qrSize');
+        const qrErrorLevelSelect = document.getElementById('qrErrorLevel');
+        const qrColorDarkInput = document.getElementById('qrColorDark');
+        const qrColorLightInput = document.getElementById('qrColorLight');
+        const qrQuietZoneSelect = document.getElementById('qrQuietZone');
+        
+        const qrLogoSelect = document.getElementById('qrLogoSelect');
+        const qrLogoUploadInput = document.getElementById('qrLogoUpload');
+        const customLogoUploadContainer = document.getElementById('customLogoUploadContainer');
+        const logoPreviewImg = document.getElementById('logoPreview');
+        const qrLogoSizeSelect = document.getElementById('qrLogoSize');
+        const qrLogoBgCheckbox = document.getElementById('qrLogoBg');
+
+        const generateQrButtonMain = document.getElementById('generateQrButtonMain'); 
+        const mainCanvas = document.getElementById('qrcodeCanvas'); 
+        const qrCodeContainerWrapper = document.getElementById('qrCodeContainerWrapper');
+        const downloadQrButton = document.getElementById('downloadQrButton');
+        const qrTip = document.getElementById('qrTip');
+        const borderTemplateGallery = document.getElementById('borderTemplateGallery');
+        
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        const messageModal = document.getElementById('messageModal');
+        const messageModalTitle = document.getElementById('messageModalTitle');
+        const messageModalText = document.getElementById('messageModalText');
+        const closeMessageModal = document.getElementById('closeMessageModal');
+        const messageModalButtons = document.getElementById('messageModalButtons');
+        
+        let uploadedLogoImage = null; 
+        let activeBorderTemplateKey = 'none';
+
+
+        // --- Border Templates Definitions ---
+        const borderTemplates = {
+            none: { 
+                name: "Polos", iconClass: "fas fa-ban", padding: 0, draw: null 
+            },
+            scanMe1: {
+                name: "Scan Me Simpel", iconClass: "fas fa-text-height", padding: 40, 
+                draw: function(ctx, canvasWidth, canvasHeight, qrActualSize, qrColorDark, qrColorLight) {
+                    const padding = this.padding; 
+                    const qrX = (canvasWidth - qrActualSize) / 2;
+                    const qrY = (canvasHeight - qrActualSize) / 2;
+                    ctx.strokeStyle = qrColorDark; ctx.lineWidth = 2;
+                    ctx.strokeRect(qrX - 5, qrY - 5, qrActualSize + 10, qrActualSize + 10); 
+                    ctx.fillStyle = qrColorDark; ctx.font = `bold ${Math.min(18, padding * 0.35)}px Poppins`;
+                    ctx.textAlign = "center";
+                    ctx.fillText("SCAN ME", canvasWidth / 2, qrY - padding / 2.8);
+                    ctx.fillText("UNTUK INFO", canvasWidth / 2, qrY + qrActualSize + padding / 2.5);
+                }
+            },
+            scanMe2: {
+                name: "Scan Modern", iconClass: "fas fa-expand-alt", padding: 50,
+                draw: function(ctx, canvasWidth, canvasHeight, qrActualSize, qrColorDark, qrColorLight) {
+                    const padding = this.padding; const qrX = (canvasWidth - qrActualSize) / 2;
+                    const qrY = (canvasHeight - qrActualSize) / 2; const fontSize = Math.min(22, padding * 0.4);
+                    ctx.fillStyle = qrColorDark; ctx.font = `700 ${fontSize}px Poppins`; ctx.textAlign = "center";
+                    const textYTop = qrY - padding / 2.3; const textYBottom = qrY + qrActualSize + padding / 1.7;
+                    ctx.fillText("ARAHKAN KAMERA", canvasWidth / 2, textYTop);
+                    ctx.fillStyle = qrColorLight; ctx.fillRect(canvasWidth/2 - 40, textYBottom - fontSize*0.8, 80, fontSize*1.2); 
+                    ctx.fillStyle = qrColorDark; ctx.fillText("DISINI", canvasWidth / 2, textYBottom);
+                    ctx.strokeStyle = qrColorDark; ctx.lineWidth = 3; const lineLength = qrActualSize * 0.12; const offset = 8;
+                    ctx.beginPath(); ctx.moveTo(qrX-offset,qrY-offset+lineLength); ctx.lineTo(qrX-offset,qrY-offset); ctx.lineTo(qrX-offset+lineLength,qrY-offset); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(qrX+qrActualSize+offset-lineLength,qrY-offset); ctx.lineTo(qrX+qrActualSize+offset,qrY-offset); ctx.lineTo(qrX+qrActualSize+offset,qrY-offset+lineLength); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(qrX-offset+lineLength,qrY+qrActualSize+offset); ctx.lineTo(qrX-offset,qrY+qrActualSize+offset); ctx.lineTo(qrX-offset,qrY+qrActualSize+offset-lineLength); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(qrX+qrActualSize+offset,qrY+qrActualSize+offset-lineLength); ctx.lineTo(qrX+qrActualSize+offset,qrY+qrActualSize+offset); ctx.lineTo(qrX+qrActualSize+offset-lineLength,qrY+qrActualSize+offset); ctx.stroke();
+                }
+            },
+            elegantFrame: {
+                name: "Bingkai Ganda", iconClass: "far fa-square", padding: 20,
+                draw: function(ctx, canvasWidth, canvasHeight, qrActualSize, qrColorDark, qrColorLight) {
+                    const padding = this.padding; const qrX=(canvasWidth-qrActualSize)/2; const qrY=(canvasHeight-qrActualSize)/2;
+                    ctx.strokeStyle=qrColorDark; ctx.lineWidth=1;
+                    ctx.strokeRect(qrX-padding/2,qrY-padding/2,qrActualSize+padding,qrActualSize+padding);
+                    ctx.lineWidth=3;
+                    ctx.strokeRect(qrX-padding/2+6,qrY-padding/2+6,qrActualSize+padding-12,qrActualSize+padding-12);
+                }
+            },
+            cornerDots: { 
+                name: "Titik Sudut", iconClass: "fas fa-braille", padding: 20,
+                draw: function(ctx, canvasWidth, canvasHeight, qrActualSize, qrColorDark, qrColorLight) {
+                    const padding = this.padding; const qrX=(canvasWidth-qrActualSize)/2; const qrY=(canvasHeight-qrActualSize)/2;
+                    const dotRadius = 4;
+                    ctx.fillStyle = qrColorDark;
+                    const positions = [
+                        {x: qrX - padding/2 + dotRadius, y: qrY - padding/2 + dotRadius}, {x: qrX + qrActualSize + padding/2 - dotRadius, y: qrY - padding/2 + dotRadius},
+                        {x: qrX - padding/2 + dotRadius, y: qrY + qrActualSize + padding/2 - dotRadius}, {x: qrX + qrActualSize + padding/2 - dotRadius, y: qrY + qrActualSize + padding/2 - dotRadius}
+                    ];
+                    positions.forEach(pos => { ctx.beginPath(); ctx.arc(pos.x, pos.y, dotRadius, 0, 2 * Math.PI); ctx.fill(); });
+                }
+            },
+            techFrame: { 
+                name: "Tech Lines", iconClass: "fas fa-microchip", padding: 25,
+                draw: function(ctx, canvasWidth, canvasHeight, qrActualSize, qrColorDark, qrColorLight) {
+                    const padding = this.padding; const qrX=(canvasWidth-qrActualSize)/2; const qrY=(canvasHeight-qrActualSize)/2;
+                    ctx.strokeStyle = qrColorDark; ctx.lineWidth = 1.5;
+                    const lineOff = 5;
+                    for(let i=0; i<4; i++) { 
+                        const L = qrActualSize * (0.05 + i*0.02);
+                        ctx.beginPath(); ctx.moveTo(qrX-padding/2+lineOff, qrY-padding/2+L+lineOff); ctx.lineTo(qrX-padding/2+L+lineOff, qrY-padding/2+lineOff); ctx.stroke();
+                        ctx.beginPath(); ctx.moveTo(qrX+qrActualSize+padding/2-L-lineOff, qrY-padding/2+lineOff); ctx.lineTo(qrX+qrActualSize+padding/2-lineOff, qrY-padding/2+L+lineOff); ctx.stroke();
+                        ctx.beginPath(); ctx.moveTo(qrX-padding/2+lineOff, qrY+qrActualSize+padding/2-L-lineOff); ctx.lineTo(qrX-padding/2+L+lineOff, qrY+qrActualSize+padding/2-lineOff); ctx.stroke();
+                        ctx.beginPath(); ctx.moveTo(qrX+qrActualSize+padding/2-L-lineOff, qrY+qrActualSize+padding/2-lineOff); ctx.lineTo(qrX+qrActualSize+padding/2-lineOff, qrY+qrActualSize+padding/2-L-lineOff); ctx.stroke();
+                    }
+                }
+            }
+        };
+
+        function renderBorderTemplateGallery() {
+            if (!borderTemplateGallery) return; 
+            borderTemplateGallery.innerHTML = '';
+            for (const key in borderTemplates) {
+                const template = borderTemplates[key];
+                const div = document.createElement('div');
+                div.className = 'template-preview';
+                if (key === activeBorderTemplateKey) div.classList.add('active');
+                div.dataset.templateKey = key;
+                div.innerHTML = `
+                    <i class="${template.iconClass} template-preview-icon"></i>
+                    <span class="template-preview-text">${template.name}</span>
+                `;
+                div.addEventListener('click', () => {
+                    document.querySelectorAll('.template-preview.active').forEach(el => el.classList.remove('active'));
+                    div.classList.add('active');
+                    activeBorderTemplateKey = key;
+                    if (qrDataInput && qrDataInput.value.trim()) generateQRCode();
+                });
+                borderTemplateGallery.appendChild(div);
+            }
+        }
+
+
+        // --- Utility Functions & Modals ---
+        function showMessage(title, text) {
+            if (!messageModal || !messageModalTitle || !messageModalText || !messageModalButtons) return;
+            messageModalTitle.textContent = title; messageModalText.innerHTML = text;
+            const okButton = messageModalButtons.querySelector('#messageModalOkButton') || document.createElement('button');
+            okButton.id = 'messageModalOkButton';
+            okButton.className = 'py-2.5 px-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg fun-button';
+            okButton.textContent = 'OK';
+            okButton.onclick = () => messageModal.classList.remove('show');
+            messageModalButtons.innerHTML = ''; 
+            messageModalButtons.appendChild(okButton);
+            messageModal.classList.add('show');
+        }
+        if(closeMessageModal) { 
+            closeMessageModal.onclick = () => { if (messageModal) messageModal.classList.remove('show'); };
+        }
+
+
+        // --- Theme Management ---
+        function updateThemeUI(isDark) {
+            if (themeIcon) {
+                themeIcon.classList.toggle('fa-sun', !isDark); 
+                themeIcon.classList.toggle('fa-moon', isDark);
+            }
+            const logoTextElements = document.querySelectorAll('#deepScanHeaderLogo text, #deepScanHeaderLogo tspan'); 
+            logoTextElements.forEach(el => {
+                if (el.getAttribute('fill') !== 'url(#logoGradientScan)') {
+                    el.style.fill = isDark ? '#c9d1d9' : '#1f2937';
+                }
+            });
+        }
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        function applyInitialTheme() {
+            const savedTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark' : 'light');
+            document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+            updateThemeUI(savedTheme === 'dark');
+        }
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                updateThemeUI(isDark);
+            });
+        }
+
+
+        // --- Logo Handling ---
+        if (qrLogoSelect) {
+            qrLogoSelect.addEventListener('change', function() {
+                if (customLogoUploadContainer) customLogoUploadContainer.style.display = this.value === 'custom' ? 'block' : 'none';
+                if (this.value !== 'custom') {
+                    if(qrLogoUploadInput) qrLogoUploadInput.value = null; 
+                    if(logoPreviewImg) logoPreviewImg.style.display = 'none';
+                    uploadedLogoImage = null;
+                }
+            });
+        }
+
+        if (qrLogoUploadInput) {
+            qrLogoUploadInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        uploadedLogoImage = new Image();
+                        uploadedLogoImage.onload = () => { 
+                            if(logoPreviewImg) {
+                                logoPreviewImg.src = e.target.result;
+                                logoPreviewImg.style.display = 'block';
+                            }
+                        }; 
+                        uploadedLogoImage.onerror = () => {
+                            showMessage("Error Logo", "Gagal memuat gambar logo kustom.");
+                            uploadedLogoImage = null;
+                            if (logoPreviewImg) logoPreviewImg.style.display = 'none';
+                        };
+                        uploadedLogoImage.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    uploadedLogoImage = null;
+                    if (logoPreviewImg) logoPreviewImg.style.display = 'none';
+                }
+            });
+        }
+
+        // --- QR Code Logic ---
+        async function generateQRCode() {
+            if (!qrDataInput || !qrSizeSelect || !qrErrorLevelSelect || !qrColorDarkInput || !qrColorLightInput || !qrQuietZoneSelect || !mainCanvas || !qrLogoSelect || !qrLogoSizeSelect || !qrLogoBgCheckbox) {
+                console.error("One or more essential DOM elements are missing for QR generation.");
+                return;
+            }
+
+            const data = qrDataInput.value.trim();
+            if (!data) {
+                showMessage("Input Kosong", "Silakan masukkan data (teks atau URL) untuk membuat kode QR.");
+                return;
+            }
+
+            const baseQrSize = parseInt(qrSizeSelect.value); 
+            const errorLevel = qrErrorLevelSelect.value;
+            const colorDark = qrColorDarkInput.value;
+            const colorLight = qrColorLightInput.value;
+            const quietZoneQrcodeLib = parseInt(qrQuietZoneSelect.value); 
+            
+            const selectedTemplate = borderTemplates[activeBorderTemplateKey]; 
+            const templatePadding = selectedTemplate && selectedTemplate.padding ? selectedTemplate.padding : 0;
+
+            const finalCanvasSize = baseQrSize + (templatePadding * 2); 
+            mainCanvas.width = finalCanvasSize;
+            mainCanvas.height = finalCanvasSize;
+            const ctx = mainCanvas.getContext('2d');
+            ctx.clearRect(0, 0, finalCanvasSize, finalCanvasSize);
+            ctx.fillStyle = colorLight; 
+            ctx.fillRect(0, 0, finalCanvasSize, finalCanvasSize);
+
+
+            const logoChoice = qrLogoSelect.value;
+            const logoSizeRatio = parseFloat(qrLogoSizeSelect.value);
+            const addLogoBg = qrLogoBgCheckbox.checked;
+
+            const tempQrContainer = document.createElement('div');
+            try {
+                new QRCode(tempQrContainer, {
+                    text: data,
+                    width: baseQrSize, 
+                    height: baseQrSize,
+                    colorDark: colorDark,
+                    colorLight: colorLight, 
+                    correctLevel: QRCode.CorrectLevel[errorLevel],
+                    margin: quietZoneQrcodeLib 
+                });
+            } catch (error) {
+                console.error("Error generating QR with qrcode.js:", error);
+                showMessage("Error Pembuatan QR", "Kesalahan saat membuat QR code dasar: " + error.message);
+                if(downloadQrButton) downloadQrButton.style.display = 'none'; 
+                if(qrTip) qrTip.style.display = 'none'; 
+                return;
+            }
+            
+            await new Promise(resolve => setTimeout(resolve, 50)); // Reduced delay, qrcode.js is usually fast
+            
+            const qrImageElement = tempQrContainer.querySelector('img') || tempQrContainer.querySelector('canvas');
+            
+            if (!qrImageElement || (qrImageElement.tagName === 'IMG' && !qrImageElement.src) || (qrImageElement.tagName === 'CANVAS' && (qrImageElement.width === 0 || qrImageElement.height === 0))) { 
+                showMessage("Error Pembuatan QR", "Gagal mendapatkan hasil QR dari pustaka. Data mungkin terlalu panjang untuk ukuran/level koreksi terpilih, atau terjadi error internal."); 
+                if(downloadQrButton) downloadQrButton.style.display = 'none'; 
+                if(qrTip) qrTip.style.display = 'none'; 
+                mainCanvas.getContext('2d').clearRect(0,0,mainCanvas.width, mainCanvas.height); // Clear main canvas on error
+                return; 
+            }
+            
+            const drawQrToMainCanvas = async (qrSource) => {
+                ctx.clearRect(0, 0, finalCanvasSize, finalCanvasSize);
+                ctx.fillStyle = colorLight; 
+                ctx.fillRect(0, 0, finalCanvasSize, finalCanvasSize);
+
+                if (selectedTemplate && selectedTemplate.draw) {
+                    selectedTemplate.draw(ctx, finalCanvasSize, finalCanvasSize, baseQrSize, colorDark, colorLight, "SCAN ME");
+                }
+                
+                const qrX = (finalCanvasSize - baseQrSize) / 2;
+                const qrY = (finalCanvasSize - baseQrSize) / 2;
+                try {
+                    ctx.drawImage(qrSource, qrX, qrY, baseQrSize, baseQrSize);
+                } catch (drawError) {
+                    console.error("Error drawing QR source to main canvas:", drawError);
+                    showMessage("Error Menggambar QR", "Gagal menggambar QR code ke canvas utama.");
+                    return; 
+                }
+
+                let logoToDraw = null;
+                // Handle custom uploaded logo
+                if (logoChoice === 'custom' && uploadedLogoImage && uploadedLogoImage.complete && uploadedLogoImage.naturalWidth > 0) {
+                    logoToDraw = uploadedLogoImage;
+                } 
+                // Handle predefined Font Awesome logos
+                else if (logoChoice && logoChoice !== 'custom') {
+                    const selectedOption = qrLogoSelect.querySelector(`option[value="${logoChoice}"]`);
+                    const iconClass = selectedOption ? selectedOption.dataset.icon : null;
+                    const iconColor = selectedOption ? selectedOption.dataset.color : colorDark; 
+
+                    if (iconClass) {
+                        const logoActualSize = baseQrSize * logoSizeRatio;
+                        const logoPosX = qrX + (baseQrSize - logoActualSize) / 2; 
+                        const logoPosY = qrY + (baseQrSize - logoActualSize) / 2;
+                        
+                        if (addLogoBg) {
+                            const bgPadding = logoActualSize * 0.08; // Adjusted padding
+                            ctx.fillStyle = colorLight; 
+                            ctx.fillRect(logoPosX - bgPadding, logoPosY - bgPadding, logoActualSize + bgPadding * 2, logoActualSize + bgPadding * 2);
+                        }
+                        
+                        ctx.font = `${logoActualSize * 0.9}px "Font Awesome 6 Brands", "Font Awesome 6 Free"`;
+                        if (iconClass.startsWith("fas")) { // Solid icons might need "Font Awesome 6 Free" with weight
+                             ctx.font = `900 ${logoActualSize * 0.9}px "Font Awesome 6 Free"`;
+                        }
+                        ctx.fillStyle = iconColor;
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        
+                        // Mapping Font Awesome class to Unicode character
+                        const faUnicodeMap = {
+                            'fab fa-youtube': '\uf167', 'fab fa-instagram': '\uf16d',
+                            'fab fa-tiktok': '\ue07b', 'fab fa-twitter': '\uf099', // Using old Twitter for wider compatibility, X might need specific font/unicode
+                            'fab fa-facebook-f': '\uf39e', 'fab fa-github': '\uf09b',
+                            'fab fa-whatsapp': '\uf232', 'fab fa-linkedin-in': '\uf0e1',
+                            'fab fa-spotify': '\uf1bc', 'fas fa-link': '\uf0c1',
+                            'fas fa-wifi': '\uf1eb'
+                        };
+                        const faUnicode = faUnicodeMap[iconClass];
+
+                        if (faUnicode) {
+                            ctx.fillText(faUnicode, logoPosX + logoActualSize / 2, logoPosY + logoActualSize / 2);
+                        } else {
+                             console.warn(`Unicode untuk logo ${logoChoice} (${iconClass}) tidak ditemukan.`);
+                             // Draw a placeholder if unicode not found for predefined
+                             ctx.fillStyle = iconColor;
+                             ctx.fillRect(logoPosX, logoPosY, logoActualSize, logoActualSize);
+                             ctx.fillStyle = getContrastYIQ(iconColor);
+                             ctx.font = `${logoActualSize * 0.4}px Poppins`;
+                             ctx.fillText("?", logoPosX + logoActualSize/2, logoPosY + logoActualSize/2);
+                        }
+                        logoToDraw = true; // Mark that a logo (even FontAwesome) was attempted
+                    }
+                }
+                
+                // If it was an uploaded image, draw it (already handled if logoToDraw is an Image object)
+                if (logoToDraw && typeof logoToDraw.tagName !== 'undefined' && logoToDraw.tagName === 'IMG' && logoToDraw.naturalWidth > 0) { 
+                    const logoActualSize = baseQrSize * logoSizeRatio;
+                    const logoPosX = qrX + (baseQrSize - logoActualSize) / 2; 
+                    const logoPosY = qrY + (baseQrSize - logoActualSize) / 2;
+                    
+                    if (addLogoBg) {
+                        const bgPadding = logoActualSize * 0.1; 
+                        ctx.fillStyle = colorLight; 
+                        ctx.fillRect(logoPosX - bgPadding, logoPosY - bgPadding, logoActualSize + bgPadding * 2, logoActualSize + bgPadding * 2);
+                    }
+                    ctx.drawImage(logoToDraw, logoPosX, logoPosY, logoActualSize, logoActualSize);
+                }
+                
+                if(qrCodeContainerWrapper) {
+                    qrCodeContainerWrapper.style.maxWidth = `${finalCanvasSize + 20}px`; 
+                    qrCodeContainerWrapper.style.minHeight = `${finalCanvasSize + 20}px`;
+                }
+
+                if(downloadQrButton) downloadQrButton.style.display = 'inline-flex';
+                if(qrTip) qrTip.style.display = 'block';
+            };
+
+            if (qrImageElement.tagName === 'CANVAS') {
+                if (qrImageElement.width > 0 && qrImageElement.height > 0) {
+                    await drawQrToMainCanvas(qrImageElement);
+                } else {
+                     showMessage("Error Pembuatan QR", "QR code dasar (canvas) kosong atau tidak valid.");
+                }
+            } else if (qrImageElement.tagName === 'IMG') {
+                const img = qrImageElement;
+                if (img.complete && img.naturalWidth > 0) { 
+                    await drawQrToMainCanvas(img);
+                } else if (!img.complete) {
+                    let imgLoadTimeout = setTimeout(() => {
+                        if (!img.complete || img.naturalWidth === 0) {
+                            showMessage("Error Pembuatan QR", "Gagal memuat gambar QR code dasar (timeout).");
+                        }
+                    }, 3000); 
+
+                    img.onload = async () => { 
+                        clearTimeout(imgLoadTimeout);
+                        if (img.naturalWidth > 0) {
+                            await drawQrToMainCanvas(img); 
+                        } else {
+                            showMessage("Error Pembuatan QR", "Gambar QR code dasar gagal dimuat (dimensi 0).");
+                        }
+                    };
+                    img.onerror = () => { 
+                        clearTimeout(imgLoadTimeout);
+                        showMessage("Error Pembuatan QR", "Gagal memuat gambar QR code dasar (onerror)."); 
+                    };
+                } else { 
+                     showMessage("Error Pembuatan QR", "Gambar QR code dasar tidak valid atau gagal dimuat segera.");
+                }
+            }
+        }
+
+        if(generateQrButtonMain) { 
+            generateQrButtonMain.addEventListener('click', generateQRCode); 
+        }
+
+
+        if(downloadQrButton) {
+            downloadQrButton.addEventListener('click', () => {
+                if (mainCanvas && mainCanvas.width > 0 && mainCanvas.height > 0) { 
+                    const dataUrl = mainCanvas.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.download = 'DeepScan_QRCode_Kustom.png';
+                    link.href = dataUrl;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } else {
+                    showMessage("Error Unduh", "Tidak ada kode QR valid untuk diunduh. Buat kode QR terlebih dahulu.");
+                }
+            });
+        }
+
+        // --- Initialization ---
+        const yearElement = document.getElementById('year');
+        if (yearElement) yearElement.textContent = new Date().getFullYear();
+        
+        applyInitialTheme();
+        renderBorderTemplateGallery(); 
+        
+        const initialData = qrDataInput ? qrDataInput.value.trim() : "";
+        const initialQrSize = parseInt(qrSizeSelect ? qrSizeSelect.value : "256");
+        const initialTemplate = borderTemplates[activeBorderTemplateKey];
+        const initialTemplatePadding = initialTemplate && initialTemplate.padding ? initialTemplate.padding : 0;
+        const initialFinalCanvasSize = initialQrSize + (initialTemplatePadding * 2);
+
+        if (mainCanvas) {
+           const ctxInitial = mainCanvas.getContext('2d');
+           mainCanvas.width = initialFinalCanvasSize; 
+           mainCanvas.height = initialFinalCanvasSize;
+           ctxInitial.clearRect(0,0,mainCanvas.width, mainCanvas.height);
+           ctxInitial.fillStyle = document.documentElement.classList.contains('dark') ? '#768390':'#6b7280';
+           ctxInitial.textAlign = "center";
+           ctxInitial.textBaseline = "middle"; // Agar text y-center
+           ctxInitial.font = "14px Poppins";
+           if (mainCanvas.width > 0 && mainCanvas.height > 0) { 
+              ctxInitial.fillText("Masukkan data & klik 'Buat Kode QR'", mainCanvas.width/2, mainCanvas.height/2);
+           }
+        }
+        if (initialData) { 
+           generateQRCode();
+        }
+        
+    }); 
+    </script>
+</body>
+</html>
