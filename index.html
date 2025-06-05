@@ -131,7 +131,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .fun-button {
+        .fun-button { /* Definisikan fun-button jika masih digunakan di tempat lain, atau hapus jika tidak */
             display: inline-flex; 
             align-items: center;
             justify-content: center; 
@@ -275,7 +275,8 @@
         </header>
 
         <div class="flex justify-end items-center mb-6 px-2 sm:px-0">
-            <button id="themeToggle" class="p-3 bg-gray-200 dark:bg-gray-700 rounded-full text-gray-800 dark:text-gray-200 tooltip fun-button" data-tooltip="Ganti tema">
+             <!-- Tombol Tema: kelas "fun-button" dihapus -->
+            <button id="themeToggle" class="p-3 bg-gray-200 dark:bg-gray-700 rounded-full text-gray-800 dark:text-gray-200 tooltip" data-tooltip="Ganti tema">
                 <i id="themeIcon" class="fas fa-sun w-5 h-5"></i>
             </button>
         </div>
@@ -550,7 +551,7 @@
             messageModalTitle.textContent = title; messageModalText.innerHTML = text;
             const okButton = messageModalButtons.querySelector('#messageModalOkButton') || document.createElement('button');
             okButton.id = 'messageModalOkButton';
-            okButton.className = 'py-2.5 px-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg fun-button';
+            okButton.className = 'py-2.5 px-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg fun-button'; // Assuming fun-button class is still desired for modal buttons
             okButton.textContent = 'OK';
             okButton.onclick = () => messageModal.classList.remove('show');
             messageModalButtons.innerHTML = ''; 
@@ -684,7 +685,7 @@
                 return;
             }
             
-            await new Promise(resolve => setTimeout(resolve, 50)); // Reduced delay, qrcode.js is usually fast
+            await new Promise(resolve => setTimeout(resolve, 50)); 
             
             const qrImageElement = tempQrContainer.querySelector('img') || tempQrContainer.querySelector('canvas');
             
@@ -692,7 +693,7 @@
                 showMessage("Error Pembuatan QR", "Gagal mendapatkan hasil QR dari pustaka. Data mungkin terlalu panjang untuk ukuran/level koreksi terpilih, atau terjadi error internal."); 
                 if(downloadQrButton) downloadQrButton.style.display = 'none'; 
                 if(qrTip) qrTip.style.display = 'none'; 
-                mainCanvas.getContext('2d').clearRect(0,0,mainCanvas.width, mainCanvas.height); // Clear main canvas on error
+                mainCanvas.getContext('2d').clearRect(0,0,mainCanvas.width, mainCanvas.height); 
                 return; 
             }
             
@@ -716,11 +717,9 @@
                 }
 
                 let logoToDraw = null;
-                // Handle custom uploaded logo
                 if (logoChoice === 'custom' && uploadedLogoImage && uploadedLogoImage.complete && uploadedLogoImage.naturalWidth > 0) {
                     logoToDraw = uploadedLogoImage;
                 } 
-                // Handle predefined Font Awesome logos
                 else if (logoChoice && logoChoice !== 'custom') {
                     const selectedOption = qrLogoSelect.querySelector(`option[value="${logoChoice}"]`);
                     const iconClass = selectedOption ? selectedOption.dataset.icon : null;
@@ -732,23 +731,22 @@
                         const logoPosY = qrY + (baseQrSize - logoActualSize) / 2;
                         
                         if (addLogoBg) {
-                            const bgPadding = logoActualSize * 0.08; // Adjusted padding
+                            const bgPadding = logoActualSize * 0.08; 
                             ctx.fillStyle = colorLight; 
                             ctx.fillRect(logoPosX - bgPadding, logoPosY - bgPadding, logoActualSize + bgPadding * 2, logoActualSize + bgPadding * 2);
                         }
                         
                         ctx.font = `${logoActualSize * 0.9}px "Font Awesome 6 Brands", "Font Awesome 6 Free"`;
-                        if (iconClass.startsWith("fas")) { // Solid icons might need "Font Awesome 6 Free" with weight
+                        if (iconClass.startsWith("fas")) { 
                              ctx.font = `900 ${logoActualSize * 0.9}px "Font Awesome 6 Free"`;
                         }
                         ctx.fillStyle = iconColor;
                         ctx.textAlign = "center";
                         ctx.textBaseline = "middle";
                         
-                        // Mapping Font Awesome class to Unicode character
                         const faUnicodeMap = {
                             'fab fa-youtube': '\uf167', 'fab fa-instagram': '\uf16d',
-                            'fab fa-tiktok': '\ue07b', 'fab fa-twitter': '\uf099', // Using old Twitter for wider compatibility, X might need specific font/unicode
+                            'fab fa-tiktok': '\ue07b', 'fab fa-twitter': '\uf099', 
                             'fab fa-facebook-f': '\uf39e', 'fab fa-github': '\uf09b',
                             'fab fa-whatsapp': '\uf232', 'fab fa-linkedin-in': '\uf0e1',
                             'fab fa-spotify': '\uf1bc', 'fas fa-link': '\uf0c1',
@@ -760,18 +758,16 @@
                             ctx.fillText(faUnicode, logoPosX + logoActualSize / 2, logoPosY + logoActualSize / 2);
                         } else {
                              console.warn(`Unicode untuk logo ${logoChoice} (${iconClass}) tidak ditemukan.`);
-                             // Draw a placeholder if unicode not found for predefined
                              ctx.fillStyle = iconColor;
                              ctx.fillRect(logoPosX, logoPosY, logoActualSize, logoActualSize);
                              ctx.fillStyle = getContrastYIQ(iconColor);
                              ctx.font = `${logoActualSize * 0.4}px Poppins`;
                              ctx.fillText("?", logoPosX + logoActualSize/2, logoPosY + logoActualSize/2);
                         }
-                        logoToDraw = true; // Mark that a logo (even FontAwesome) was attempted
+                        logoToDraw = true; 
                     }
                 }
                 
-                // If it was an uploaded image, draw it (already handled if logoToDraw is an Image object)
                 if (logoToDraw && typeof logoToDraw.tagName !== 'undefined' && logoToDraw.tagName === 'IMG' && logoToDraw.naturalWidth > 0) { 
                     const logoActualSize = baseQrSize * logoSizeRatio;
                     const logoPosX = qrX + (baseQrSize - logoActualSize) / 2; 
@@ -849,6 +845,15 @@
                 }
             });
         }
+        
+        function getContrastYIQ(hexcolor){ // Helper untuk placeholder logo jika unicode gagal
+            hexcolor = hexcolor.replace("#", "");
+            var r = parseInt(hexcolor.substr(0,2),16);
+            var g = parseInt(hexcolor.substr(2,2),16);
+            var b = parseInt(hexcolor.substr(4,2),16);
+            var yiq = ((r*299)+(g*587)+(b*114))/1000;
+            return (yiq >= 128) ? 'black' : 'white';
+        }
 
         // --- Initialization ---
         const yearElement = document.getElementById('year');
@@ -870,7 +875,7 @@
            ctxInitial.clearRect(0,0,mainCanvas.width, mainCanvas.height);
            ctxInitial.fillStyle = document.documentElement.classList.contains('dark') ? '#768390':'#6b7280';
            ctxInitial.textAlign = "center";
-           ctxInitial.textBaseline = "middle"; // Agar text y-center
+           ctxInitial.textBaseline = "middle"; 
            ctxInitial.font = "14px Poppins";
            if (mainCanvas.width > 0 && mainCanvas.height > 0) { 
               ctxInitial.fillText("Masukkan data & klik 'Buat Kode QR'", mainCanvas.width/2, mainCanvas.height/2);
